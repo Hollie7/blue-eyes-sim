@@ -1,6 +1,23 @@
 # streamlit_app.py
+import os
 import streamlit as st
 import pandas as pd
+from dotenv import load_dotenv  # for local / Codespaces dev
+
+# 1) Load .env for local development (Codespaces, your laptop, etc.)
+load_dotenv()
+
+# 2) If running on Streamlit Cloud, override from st.secrets (if available)
+#    Use try/except so that missing secrets.toml does NOT crash locally.
+try:
+    # This will work only if secrets.toml / Cloud secrets exist
+    api_key_from_secrets = st.secrets["OPENAI_API_KEY"]
+    os.environ["OPENAI_API_KEY"] = api_key_from_secrets
+except Exception:
+    # No secrets configured (e.g., local dev) -> just keep whatever is in .env
+    pass
+
+# 3) Import simulator AFTER the key is set
 from simulator import BlueEyesWorld
 
 """
